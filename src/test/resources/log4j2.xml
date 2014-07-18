@@ -1,0 +1,12 @@
+<configuration status="OFF">
+    <appenders>
+        <NoSql name="elasticsearchAppender">
+            <Elasticsearch cluster="elasticsearch" host="localhost" port="9300" index="log4j2" type="log4j2"/>
+        </NoSql>
+    </appenders>
+    <loggers>
+        <root level="info">
+            <appender-ref ref="elasticsearchAppender"/>
+        </root>
+    </loggers>
+</configuration>
