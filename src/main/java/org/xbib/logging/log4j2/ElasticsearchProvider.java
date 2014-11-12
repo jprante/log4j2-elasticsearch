@@ -34,11 +34,11 @@ public class ElasticsearchProvider implements NoSqlProvider<ElasticsearchConnect
 
     private static final Logger logger = StatusLogger.getLogger();
 
-    private final BulkTransportClient client;
+    private final ElasticsearchTransportClient client;
 
     private final String description;
 
-    private ElasticsearchProvider(final BulkTransportClient client, final String description) {
+    private ElasticsearchProvider(final ElasticsearchTransportClient client, final String description) {
         this.client = client;
         this.description = "elasticsearch{ " + description + " }";
     }
@@ -125,12 +125,12 @@ public class ElasticsearchProvider implements NoSqlProvider<ElasticsearchConnect
             return null;
         }
         String description = "cluster=" + cluster + ",host=" + host + ",port=" + port + ",index=" + index + ",type=" + type;
-        BulkTransportClient bulkTransportClient = new BulkTransportClient(client, index, type,
+        ElasticsearchTransportClient elasticsearchTransportClient = new ElasticsearchTransportClient(client, index, type,
                 maxActionsPerBulkRequest, maxConcurrentBulkRequests,
                 ByteSizeValue.parseBytesSizeValue(maxVolumePerBulkRequest),
                 TimeValue.parseTimeValue(flushInterval, TimeValue.timeValueSeconds(30)));
 
-        return new ElasticsearchProvider(bulkTransportClient, description);
+        return new ElasticsearchProvider(elasticsearchTransportClient, description);
     }
 
 }

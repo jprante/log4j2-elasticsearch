@@ -24,11 +24,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ElasticsearchConnection implements NoSqlConnection<Map<String, Object>, ElasticsearchObject> {
 
-    private final BulkTransportClient client;
+    private final ElasticsearchTransportClient client;
 
     private final AtomicBoolean closed = new AtomicBoolean(false);
 
-    public ElasticsearchConnection(final BulkTransportClient client) {
+    public ElasticsearchConnection(final ElasticsearchTransportClient client) {
         this.client = client;
     }
 

@@ -26,7 +26,7 @@ import org.elasticsearch.common.unit.TimeValue;
 
 import java.util.Map;
 
-public class BulkTransportClient {
+public class ElasticsearchTransportClient {
 
     private final Client client;
 
@@ -38,11 +38,11 @@ public class BulkTransportClient {
 
     private volatile boolean closed = false;
 
-    public BulkTransportClient(Client client, String index, String type,
-                               int maxActionsPerBulkRequest,
-                               int maxConcurrentBulkRequests,
-                               ByteSizeValue maxVolumePerBulkRequest,
-                               TimeValue flushInterval) {
+    public ElasticsearchTransportClient(Client client, String index, String type,
+                                        int maxActionsPerBulkRequest,
+                                        int maxConcurrentBulkRequests,
+                                        ByteSizeValue maxVolumePerBulkRequest,
+                                        TimeValue flushInterval) {
         this.client = client;
         this.index = index;
         this.type = type;
@@ -71,7 +71,7 @@ public class BulkTransportClient {
         this.closed = false;
     }
 
-    public BulkTransportClient index(Map<String, Object> source) {
+    public ElasticsearchTransportClient index(Map<String, Object> source) {
         if (closed) {
             throw new ElasticsearchIllegalStateException("client is closed");
         }

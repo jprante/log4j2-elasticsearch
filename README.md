@@ -82,11 +82,11 @@ For advanced usage, there are the following settings:
 
 # Versions
 
-| Log4j2 Elasticsearch appender   | Release date |
-| --------------------------------| -------------|
-| 1.0.0                           | Jul 18, 2014 |
+| Log4j2 Elasticsearch appender   | Elasticssearch Version | Release date |
+| --------------------------------| -----------------------|--------------|
+| 1.4.0.0                         | 1.4.0                  | Nov 12, 2014 |
+| 1.0.0                           | 1.2.2                  | Jul 18, 2014 |
 
-This appender uses Elasticsearch 1.2.2
 
 # Installation
 
@@ -103,7 +103,7 @@ This appender uses Elasticsearch 1.2.2
             <dependency>
                 <groupId>org.xbib.logging.log4j2</groupId>
                 <artifactId>log4j2-elasticsearch</artifactId>
-                <version>1.0.0</version>
+                <version>1.4.0.0</version>
             </dependency>
         </dependencies>
 
