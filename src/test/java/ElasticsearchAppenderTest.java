@@ -25,4 +25,18 @@ public class ElasticsearchAppenderTest {
         Logger logger = LogManager.getLogger("test");
         logger.info("Hello World");
     }
+
+    @Test
+    public void testMassiveLog() {
+        Logger logger = LogManager.getLogger("test");
+        for (int i = 0; i < 10000; i++) {
+            logger.info("Hello World, this is message " + i);
+        }
+    }
+
+    @Test
+    public void testTimeLog() {
+        Logger logger = LogManager.getLogger("time");
+        logger.info("Hello World");
+    }
 }

@@ -3,8 +3,17 @@
         <NoSql name="elasticsearchAppender">
             <Elasticsearch cluster="elasticsearch" host="localhost" port="9300" index="log4j2" type="log4j2"/>
         </NoSql>
+        <NoSql name="elasticsearchTimeAppender">
+            <Elasticsearch cluster="elasticsearch" host="localhost" port="9300" index="'log4j2-'yyyyMMdd" type="log4j2"/>
+        </NoSql>
     </appenders>
     <loggers>
+        <logger name="test">
+            <appender-ref ref="elasticsearchAppender"/>
+        </logger>
+        <logger name="time">
+            <appender-ref ref="elasticsearchTimeAppender"/>
+        </logger>
         <root level="info">
             <appender-ref ref="elasticsearchAppender"/>
         </root>

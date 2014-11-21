@@ -24,6 +24,9 @@ import org.elasticsearch.client.Client;
 import org.elasticsearch.common.unit.ByteSizeValue;
 import org.elasticsearch.common.unit.TimeValue;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 public class ElasticsearchTransportClient {
@@ -76,6 +79,7 @@ public class ElasticsearchTransportClient {
             throw new ElasticsearchIllegalStateException("client is closed");
         }
         try {
+            String index = this.index.indexOf('\'') < 0 ? this.index : getIndexNameDateFormat(this.index).format(new Date());
             bulkProcessor.add(new IndexRequest(index).type(type).create(false).source(source));
         } catch (Exception e) {
             closed = true;
@@ -86,5 +90,22 @@ public class ElasticsearchTransportClient {
     public void close() {
         bulkProcessor.close();
         client.close();
+    }
+
+    private static final ThreadLocal<Map<String, SimpleDateFormat>> df = new ThreadLocal<Map<String, SimpleDateFormat>>() {
+        public Map<String, SimpleDateFormat> initialValue() {
+            return new HashMap<String, SimpleDateFormat>();
+        }
+    };
+
+    private SimpleDateFormat getIndexNameDateFormat(String index) {
+        Map<String, SimpleDateFormat> formatters = df.get();
+        SimpleDateFormat formatter = formatters.get(index);
+        if (formatter == null) {
+            formatter = new SimpleDateFormat();
+            formatter.applyPattern(index);
+            formatters.put(index, formatter);
+        }
+        return formatter;
     }
 }
