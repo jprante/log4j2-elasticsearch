@@ -94,6 +94,7 @@ For advanced usage, there are the following settings:
 
 | Log4j2 Elasticsearch appender   | Elasticssearch Version | Release date |
 | --------------------------------| -----------------------|--------------|
+| 1.7.2.0                         | 1.7.2                  | Sep 16, 2015 |
 | 1.4.0.1                         | 1.4.0                  | Nov 21, 2014 |
 | 1.4.0.0                         | 1.4.0                  | Nov 12, 2014 |
 | 1.0.0                           | 1.2.2                  | Jul 18, 2014 |
@@ -114,7 +115,7 @@ For advanced usage, there are the following settings:
             <dependency>
                 <groupId>org.xbib.logging.log4j2</groupId>
                 <artifactId>log4j2-elasticsearch</artifactId>
-                <version>1.4.0.1</version>
+                <version>1.7.2.0</version>
             </dependency>
         </dependencies>
 

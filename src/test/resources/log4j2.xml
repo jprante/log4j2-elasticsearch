@@ -1,10 +1,13 @@
 <configuration status="OFF">
     <appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="[%d{ABSOLUTE}][%-5p][%-25c][%t] %m%n"/>
+        </Console>
         <NoSql name="elasticsearchAppender">
-            <Elasticsearch cluster="elasticsearch" host="localhost" port="9300" index="log4j2" type="log4j2"/>
+            <Elasticsearch cluster="elasticsearch" host="localhost" port="9300" index="log4j2" type="log4j2" flushInterval="5s"/>
         </NoSql>
         <NoSql name="elasticsearchTimeAppender">
-            <Elasticsearch cluster="elasticsearch" host="localhost" port="9300" index="'log4j2-'yyyyMMdd" type="log4j2"/>
+            <Elasticsearch cluster="elasticsearch" host="localhost" port="9300" index="'log4j2-'yyyyMMdd" type="log4j2" flushInterval="5s"/>
         </NoSql>
     </appenders>
     <loggers>
@@ -14,7 +17,8 @@
         <logger name="time">
             <appender-ref ref="elasticsearchTimeAppender"/>
         </logger>
-        <root level="info">
+        <root level="debug">
+            <appender-ref ref="Console" />
             <appender-ref ref="elasticsearchAppender"/>
         </root>
     </loggers>
