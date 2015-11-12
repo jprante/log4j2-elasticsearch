@@ -21,6 +21,7 @@ import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.client.Client;
+import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.unit.ByteSizeValue;
 import org.elasticsearch.common.unit.TimeValue;
 
@@ -38,8 +39,6 @@ public class ElasticsearchTransportClient {
     private final String index;
 
     private final String type;
-
-    private volatile boolean closed = false;
 
     public ElasticsearchTransportClient(Client client, String index, String type,
                                         int maxActionsPerBulkRequest,
@@ -60,7 +59,6 @@ public class ElasticsearchTransportClient {
 
             @Override
             public void afterBulk(long executionId, BulkRequest requst, Throwable failure) {
-                closed = true;
             }
         };
         BulkProcessor.Builder builder = BulkProcessor.builder(client, listener)
@@ -71,19 +69,16 @@ public class ElasticsearchTransportClient {
             builder.setBulkSize(maxVolumePerBulkRequest);
         }
         this.bulkProcessor = builder.build();
-        this.closed = false;
     }
 
     public ElasticsearchTransportClient index(Map<String, Object> source) {
-        if (closed) {
-            throw new ElasticsearchIllegalStateException("client is closed");
+        if (((TransportClient)client).connectedNodes().isEmpty()) {
+            throw new ElasticsearchIllegalStateException("client is disconnected");
         }
-        try {
-            String index = this.index.indexOf('\'') < 0 ? this.index : getIndexNameDateFormat(this.index).format(new Date());
-            bulkProcessor.add(new IndexRequest(index).type(type).create(false).source(source));
-        } catch (Exception e) {
-            closed = true;
-        }
+
+        String index = this.index.indexOf('\'') < 0 ? this.index : getIndexNameDateFormat(this.index).format(new Date());
+        bulkProcessor.add(new IndexRequest(index).type(type).create(false).source(source));
+
         return this;
     }
 
