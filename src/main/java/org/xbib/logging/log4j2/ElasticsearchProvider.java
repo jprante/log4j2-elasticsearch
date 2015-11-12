@@ -45,6 +45,7 @@ public class ElasticsearchProvider implements NoSqlProvider<ElasticsearchConnect
 
     @Override
     public ElasticsearchConnection getConnection() {
+        //TODO validate client is viable
         return new ElasticsearchConnection(client);
     }
 
@@ -70,7 +71,6 @@ public class ElasticsearchProvider implements NoSqlProvider<ElasticsearchConnect
             @PluginAttribute("port") Integer port,
             @PluginAttribute("index") String index,
             @PluginAttribute("type") String type,
-            @PluginAttribute("sniff") Boolean sniff,
             @PluginAttribute("timeout") String timeout,
             @PluginAttribute("maxActionsPerBulkRequest") Integer maxActionsPerBulkRequest,
             @PluginAttribute("maxConcurrentBulkRequests") Integer maxConcurrentBulkRequests,
@@ -92,9 +92,6 @@ public class ElasticsearchProvider implements NoSqlProvider<ElasticsearchConnect
         if (type == null || type.isEmpty()) {
             type = "log4j2";
         }
-        if (sniff == null) {
-            sniff = false;
-        }
         if (timeout == null || timeout.isEmpty()) {
             timeout = "30s";
         }
@@ -112,14 +109,14 @@ public class ElasticsearchProvider implements NoSqlProvider<ElasticsearchConnect
                 .put("cluster.name", cluster)
                 .put("network.server", false)
                 .put("node.client", true)
-                .put("client.transport.sniff", sniff)
+                .put("client.transport.sniff", true)
                 .put("client.transport.ping_timeout", timeout)
                 .put("client.transport.ignore_cluster_name", false)
                 .put("client.transport.nodes_sampler_interval", "30s")
                 .build();
 
-        TransportClient client = new TransportClient(settings, false)
-                .addTransportAddress(new InetSocketTransportAddress(host, port));
+        TransportClient client = new TransportClient(settings, false);
+        client.addTransportAddress(new InetSocketTransportAddress(host, port));
         if (client.connectedNodes().isEmpty()) {
             logger.error("unable to connect to Elasticsearch cluster");
             return null;
@@ -129,8 +126,9 @@ public class ElasticsearchProvider implements NoSqlProvider<ElasticsearchConnect
                 maxActionsPerBulkRequest, maxConcurrentBulkRequests,
                 ByteSizeValue.parseBytesSizeValue(maxVolumePerBulkRequest),
                 TimeValue.parseTimeValue(flushInterval, TimeValue.timeValueSeconds(30)));
-
-        return new ElasticsearchProvider(elasticsearchTransportClient, description);
+        ElasticsearchProvider elasticsearchProvider = new ElasticsearchProvider(elasticsearchTransportClient, description);
+        
+        return elasticsearchProvider;
     }
 
 }
